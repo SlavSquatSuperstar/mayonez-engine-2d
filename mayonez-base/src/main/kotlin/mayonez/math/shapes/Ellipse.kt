@@ -29,11 +29,6 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
     val isAxisAligned: Boolean
         get() = MathUtils.equals(angle % 360f, 0f)
 
-    open fun circumference(): Float {
-        // Euler approximation: C = 2π * √[(a^2+b^2)/2]
-        return MathUtils.TWO_PI * sqrt(MathUtils.hypotSq(halfWidth, halfHeight) * 0.5f)
-    }
-
     /**
      * The area of an ellipse, equal to `πab`, where `a` is half the width
      * (semi-major axis) and `b` is half the height (semi-minor axis).
@@ -47,13 +42,13 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
 
     override fun boundingBox(): BoundingBox {
         /*
-         * Given center c, semi-major axes vectors a and b, and angle t from 0
+         * Given center c, semi-major axis vectors a and b, and angle t from 0
          * to 2π, the ellipse equation is r(t) = c + a * cos(t) + b * sin(t).
-         * Find the minima and maxima taking the derivative with respect to t:
+         * Find the minima and maxima by differentiating with respect to t:
          * r'(t) = -a * sin(t) + b * cos(t). Solve for r'(t).x = 0 and
-         * r'(t).y = 0 and substitute u = cos(t) and sqrt(1 - u^2) = sin(t).
-         * Obtain cos(t) = a / sqrt(a^2 + b^2)and sin(t) = b / sqrt(a^2 + b^2).
-         * Finally, obtain p(t) = c + sqrt(a^2 + b^2).
+         * r'(t).y = 0, and substitute u = cos(t) and sqrt(1 - u^2) = sin(t).
+         * Obtain cos(t) = a / √(a^2 + b^2) and sin(t) = b / √(a^2 + b^2).
+         * Finally, obtain p(t) = c + √(a^2 + b^2) component-wise for x and y.
          *
          * Source: https://iquilezles.org/articles/ellipses/
          */

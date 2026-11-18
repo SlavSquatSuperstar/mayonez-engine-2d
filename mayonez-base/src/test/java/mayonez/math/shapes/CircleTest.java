@@ -26,11 +26,6 @@ class CircleTest {
         assertEquals(4f * MathUtils.PI, circle.area(), MathUtils.FLOAT_EPSILON);
     }
 
-    @Test
-    void circumferenceCorrect() {
-        assertEquals(4f * MathUtils.PI, circle.circumference(), MathUtils.FLOAT_EPSILON);
-    }
-
     // Contains Point Tests
 
     @Test

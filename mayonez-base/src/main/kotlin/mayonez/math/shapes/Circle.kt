@@ -24,8 +24,6 @@ class Circle(
     override val isCircle: Boolean
         get() = true
 
-    override fun circumference(): Float = MathUtils.TWO_PI * radius
-
     /** The area of a circle, equal to `πr^2`. */
     override fun area(): Float = MathUtils.PI * radiusSq
 

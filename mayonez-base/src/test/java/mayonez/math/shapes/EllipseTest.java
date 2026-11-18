@@ -27,11 +27,6 @@ class EllipseTest {
         assertEquals(6f * MathUtils.PI, ellipse.area(), MathUtils.FLOAT_EPSILON);
     }
 
-    @Test
-    void circumferenceCorrect() {
-        assertEquals(2f * MathUtils.sqrt(6.5f) * MathUtils.PI, ellipse.circumference(), MathUtils.FLOAT_EPSILON);
-    }
-
 
     // Contains Point Tests
 
