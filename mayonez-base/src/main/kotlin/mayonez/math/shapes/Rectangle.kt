@@ -6,19 +6,38 @@ import java.util.*
 /**
  * A rotatable box shape (OBB) defined by a width and height. Rectangles
  * are four-sided polygons with two pairs of parallel edges and containing
- * all right angles
+ * all right angles. See also [fromMinAndMax].
+ *
+ * @constructor Constructs a rectangle with the given center, size, and angle.
+ * @param center the center
+ * @param size the size
+ * @param angle the angle in degrees
  *
  * @author SlavSquatSuperstar
  */
-open class Rectangle(private val center: Vec2, private val size: Vec2, val angle: Float) :
+open class Rectangle(protected val center: Vec2, val size: Vec2, val angle: Float) :
     Polygon(false, *rectangleVertices(center, size, angle)) {
 
+    /**
+     * Constructs a rectangle with the given center and size and rotation of 0.
+     *
+     * @param center the center
+     * @param size the size
+     */
     constructor(center: Vec2, size: Vec2) : this(center, size, 0f)
+
+    /**
+     * Constructs a rectangle with the given size centered at (0, 0) and with a
+     * rotation of 0.
+     *
+     * @param size the size
+     */
+    constructor(size: Vec2) : this(Vec2(), size, 0f)
 
     // Rectangle Properties
 
     open val isAxisAligned: Boolean
-        get() = MathUtils.equals(angle % 360f, 0f)
+        get() = MathUtils.equals(angle % 180, 0f)
 
     /** The rectangle's width (base), `b`. */
     @JvmField
@@ -131,7 +150,10 @@ open class Rectangle(private val center: Vec2, private val size: Vec2, val angle
         @JvmOverloads
         @JvmStatic
         fun rectangleVerticesMinMax(min: Vec2, max: Vec2, angle: Float = 0f): Array<Vec2> {
-            return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)).rotate(angle, (min + max) * 0.5f)
+            return arrayOf(Vec2(min), Vec2(max.x, min.y), Vec2(max), Vec2(min.x, max.y)).rotate(
+                angle,
+                (min + max) * 0.5f
+            )
         }
 
         /**

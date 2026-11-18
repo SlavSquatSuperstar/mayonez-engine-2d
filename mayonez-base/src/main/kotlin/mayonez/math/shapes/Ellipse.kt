@@ -9,25 +9,42 @@ import kotlin.math.*
  * focal points. For each point on the ellipse's boundary curve, the sum of
  * the distances to the foci is constant.
  *
+ * @constructor Constructs an ellipse with the given center, size, and angle.
+ * @param center the center
+ * @param size the size
+ * @param angle the angle in degrees
+ *
  * @author SlavSquatSuperstar
  */
 open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float) : Shape() {
 
+    /**
+     * Constructs an ellipse with the given center and size and rotation of 0.
+     *
+     * @param center the center
+     * @param size the size
+     */
     constructor(center: Vec2, size: Vec2) : this(center, size, 0f)
 
-    // Shape Properties
+    /**
+     * Constructs an ellipse with the given size centered at (0, 0) and with a
+     * rotation of 0.
+     *
+     * @param size the size
+     */
+    constructor(size: Vec2) : this(Vec2(), size, 0f)
+
+    // Ellipse Properties
 
     private val halfWidth: Float = size.x * 0.5f
 
     private val halfHeight: Float = size.y * 0.5f
 
-    // Ellipse Properties
-
     open val isCircle: Boolean
         get() = MathUtils.equals(size.x, size.y)
 
     val isAxisAligned: Boolean
-        get() = MathUtils.equals(angle % 360f, 0f)
+        get() = MathUtils.equals(angle % 180f, 0f)
 
     /**
      * The area of an ellipse, equal to `πab`, where `a` is half the width

@@ -7,6 +7,10 @@ import java.util.*
  * A round shape defined by a center and radius. The distance between every
  * point on the circle's boundary curve and the center equal to the radius.
  *
+ * @constructor Constructs a circle with the given center and radius.
+ * @param center the center
+ * @radius radius the radius
+ *
  * @author SlavSquatSuperstar
  */
 class Circle(
@@ -14,6 +18,13 @@ class Circle(
     /** The circle's radius, `r`. */
     val radius: Float
 ) : Ellipse(center, Vec2(radius * 2f), 0f) {
+
+    /**
+     * Constructs a circle with the given radius centered at (0, 0).
+     *
+     * @param radius the radius
+     */
+    constructor(radius: Float) : this(Vec2(), radius)
 
     // Circle Properties
 

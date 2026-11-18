@@ -5,12 +5,50 @@ import java.util.*
 import kotlin.math.*
 
 /**
- * A 2D line segment defined by two endpoints. An edge is a one-dimensional
- * simplex formed when two plane figures intersect.
+ * A line segment defined by two endpoints and inside the 2D plane.
+ *
+ * @constructor Constructs an edge with the given endpoints. See also
+ *     [fromLength].
+ * @param start the start point
+ * @param end the end point
  *
  * @author SlavSquatSuperstar
  */
 class Edge(val start: Vec2, val end: Vec2) : Shape() {
+
+    companion object {
+
+        /**
+         * Creates an edge with the given center and length. The edge's
+         * direction points along the positive x-axis.
+         *
+         * @param center the center
+         * @param length the length
+         */
+        @JvmStatic
+        fun fromLength(center: Vec2, length: Float): Edge {
+            val halfLength = length * 0.5f
+            return Edge(
+                center - Vec2(halfLength, 0f),
+                center + Vec2(halfLength, 0f)
+            )
+        }
+
+        /**
+         * Creates an edge with the given center, length, and angle. The edge's
+         * direction points along the positive x-axis plus the given angle.
+         *
+         * @param center the center
+         * @param length the length
+         * @param angle the angle in degrees
+         */
+        @JvmStatic
+        fun fromLength(center: Vec2, length: Float, angle: Float): Edge {
+            val halfDirection = Vec2(length * 0.5f, 0f).rotate(angle)
+            return Edge(center - halfDirection, center + halfDirection)
+        }
+
+    }
 
     // Edge Properties
 

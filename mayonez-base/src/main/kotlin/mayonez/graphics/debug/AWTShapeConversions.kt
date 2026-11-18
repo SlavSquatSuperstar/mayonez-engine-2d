@@ -25,7 +25,7 @@ internal fun MShape.toAWTShape(): JShape? {
 private fun Ellipse.toAWTEllipse(): JShape {
     val min = this.center() - (this.size * 0.5f)
     val ellipse = Ellipse2D.Float(min.x, min.y, size.x, size.y)
-    return if (this is Circle || this.isAxisAligned) ellipse
+    return if (this.isCircle || this.isAxisAligned) ellipse
     else ellipse.rotate(this.angle, this.center())
 }
 
@@ -54,7 +54,7 @@ private fun Polygon.toAWTPolygon(): JShape {
 /**
  * Rotate a [java.awt.Shape] by a given angle around its center point.
  *
- * @param angle the rotation angle*
+ * @param angle the rotation angle
  * @param center the shape's center
  * @return the rotated shape
  */

@@ -8,10 +8,20 @@ import java.util.*
  * defined by a width and height. Not to be used with a collider. For
  * rotatable rectangle, use the [Rectangle] class.
  *
+ * @constructor Constructs a bounding box with the given center, and size.
+ * @param center the center
+ * @param size the size
  * @author SlavSquatSuperstar
  */
-open class BoundingBox(private val center: Vec2, private val size: Vec2) :
+open class BoundingBox(center: Vec2, size: Vec2) :
     Rectangle(center, size) {
+
+    /**
+     * Constructs a bounding box with the given size centered at (0, 0).
+     *
+     * @param size the size
+     */
+    constructor(size: Vec2) : this(Vec2(), size)
 
     // Box Properties
 

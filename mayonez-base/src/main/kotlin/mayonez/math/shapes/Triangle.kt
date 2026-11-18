@@ -5,9 +5,8 @@ import java.util.*
 import kotlin.math.*
 
 /**
- * A three-sided polygon capable of performing additional operations. A
- * triangle is the simplest polygon, containing three vertices. It is also
- * the two-dimensional simplex, formed when two solid figures intersect.
+ * The simplest convex polygon, containing three vertices. More complex
+ * polygons can be divided into multiple triangles.
  *
  * @author SlavSquatSuperstar
  */

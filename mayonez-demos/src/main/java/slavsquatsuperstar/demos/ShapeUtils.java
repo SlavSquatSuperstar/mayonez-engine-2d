@@ -25,7 +25,7 @@ public final class ShapeUtils {
      * @param maxDiameter the maximum diameter
      * @return the ellipse
      */
-    public static Shape getRandomEllipse(Vec2 center, float minDiameter, float maxDiameter) {
+    public static Ellipse getRandomEllipse(Vec2 center, float minDiameter, float maxDiameter) {
         var isCircle = randomPercent(0.25f);
         if (isCircle) {
             var radius = Random.randomFloat(minDiameter, maxDiameter) / 2f;
@@ -45,7 +45,7 @@ public final class ShapeUtils {
      * @param maxLength the maximum side length
      * @return the rectangle
      */
-    public static Shape getRandomRectangle(Vec2 center, float minLength, float maxLength) {
+    public static Rectangle getRandomRectangle(Vec2 center, float minLength, float maxLength) {
         var isSquare = randomPercent(0.25f);
         Vec2 size;
         if (isSquare) {
@@ -188,10 +188,9 @@ public final class ShapeUtils {
      * @param maxLength the maximum length
      * @return the edge
      */
-    public static Shape getRandomEdge(Vec2 center, float minLength, float maxLength) {
-        var halfLength = Random.randomFloat(minLength, maxLength) / 2f;
-        var halfDirection = new Vec2(halfLength, 0f).rotate(Random.randomAngle());
-        return new Edge(center.sub(halfDirection), center.add(halfDirection));
+    public static Edge getRandomEdge(Vec2 center, float minLength, float maxLength) {
+        var length = Random.randomFloat(minLength, maxLength);
+        return Edge.fromLength(center, length, Random.randomAngle());
     }
 
 }
