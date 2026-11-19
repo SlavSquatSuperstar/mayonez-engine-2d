@@ -8,7 +8,7 @@ import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.DemoScene;
 import slavsquatsuperstar.demos.physics.sandbox.SandboxUI;
 
-import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
+import static slavsquatsuperstar.demos.physics.SandboxObject.*;
 
 /**
  * A scene for testing dynamic movement and collision resolution.
@@ -68,8 +68,9 @@ public class PhysicsSandboxScene extends DemoScene {
         // Create Random Shapes
         // TODO mouse pos gets out of sync
         if (!KeyInput.keyDown("left shift")) {
-            for (int i = 1; i <= 4; i++) {
-                if (KeyInput.keyPressed(String.valueOf(i))) {
+            for (int i = 0; i < NUM_SHAPE_TYPES; i++) {
+                // Use keys 1 to n
+                if (KeyInput.keyPressed(String.valueOf(i + 1))) {
                     addNode(createRandomShape(MouseInput.getPosition(), i));
                     return;
                 }

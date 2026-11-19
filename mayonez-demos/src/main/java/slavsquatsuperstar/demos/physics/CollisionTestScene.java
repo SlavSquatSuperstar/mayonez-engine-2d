@@ -4,7 +4,7 @@ import mayonez.math.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.DemoScene;
 
-import static slavsquatsuperstar.demos.physics.SandboxObjectPrefabs.*;
+import static slavsquatsuperstar.demos.physics.SandboxObject.*;
 
 /**
  * A scene for testing collision detection and resolution.
