@@ -8,29 +8,25 @@ import mayonez.physics.dynamics.*
 import mayonez.physics.manifold.*
 
 /**
- * A shape centered around the object's position
- * that detects collisions. Colliders require a
- * [mayonez.physics.dynamics.Rigidbody] to respond to collisions properly.
+ * A shape centered around the object's position that detects collisions.
+ * Colliders require a [Rigidbody] to respond to collisions properly.
  *
  * @param shape the shape object that stores the vertices and the shape's
  *     properties
  * @constructor Constructs a collider from a [Shape] object
  * @author SlavSquatSuperstar
  */
-abstract class Collider(private val shape: Shape) :
+open class Collider(shape: Shape) :
     Node(), CollisionBody {
 
     // Component References
 
     override var physicsBody: PhysicsBody? = null
 
-    /**
-     * A reference to the parent object's [mayonez.physics.dynamics.Rigidbody].
-     * A collider should have a rigidbody to react to collisions.
-     */
-    fun getRigidbody(): Rigidbody? = physicsBody as Rigidbody?
-
     // Physics Engine Properties
+
+    // Make sure shape centroid equals center of mass
+    private val shape: Shape = shape.translate(-shape.center())
 
     final override var trigger: Boolean = false
         private set

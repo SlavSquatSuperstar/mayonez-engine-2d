@@ -5,12 +5,12 @@ import mayonez.math.shapes.*
 import mayonez.physics.dynamics.*
 
 /**
- * A box collider for fast moving objects that automatically extends itself along its path
- * to avoid tunneling.
+ * A box collider for fast moving objects that automatically extends itself
+ * along its path to avoid tunneling.
  *
  * @author SlavSquatSuperstar
  */
-open class BulletBoxCollider(size: Vec2) : BoxCollider(size) {
+open class BulletBoxCollider(private val size: Vec2) : Collider(Rectangle(size)) {
 
     private lateinit var displacement: Vec2
     private var rb: PhysicsBody? = null
