@@ -101,9 +101,9 @@ class Circle(
 
     // Circle vs Point
 
-    override fun nearestPoint(position: Vec2): Vec2 {
-        return if (position in this) position
-        else center + (position - center).clampLength(radius)
+    override fun nearestPoint(to: Vec2): Vec2 {
+        return if (to in this) to
+        else center + (to - center).clampLength(radius)
     }
 
     /**

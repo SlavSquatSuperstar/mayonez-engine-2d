@@ -85,14 +85,14 @@ abstract class Shape : Transformable {
     abstract fun supportPoint(direction: Vec2): Vec2
 
     /**
-     * Calculates the point on or inside the shape with the least distance to
+     * Calculates the point on or inside this shape with the least distance to
      * the given position.
      *
-     * @param position the point to test
+     * @param to the point to test
      * @return the nearest point
      */
-    open fun nearestPoint(position: Vec2): Vec2 {
-        return if (position in this) position else supportPoint(position - center())
+    open fun nearestPoint(to: Vec2): Vec2 {
+        return if (to in this) to else supportPoint(to - center())
     }
 
     /**

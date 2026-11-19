@@ -121,12 +121,11 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
         return vertices[MathUtils.maxIndex(*dotProds)]
     }
 
-    override fun nearestPoint(position: Vec2): Vec2 {
-        if (position in this) return position
-
-        val distances = edges.map { it.distance(position) }.toFloatArray()
+    override fun nearestPoint(to: Vec2): Vec2 {
+        if (to in this) return to
+        val distances = edges.map { it.distance(to) }.toFloatArray()
         val nearestEdge = edges[MathUtils.minIndex(*distances)]
-        return nearestEdge.nearestPoint(position)
+        return nearestEdge.nearestPoint(to)
     }
 
     // Transformations

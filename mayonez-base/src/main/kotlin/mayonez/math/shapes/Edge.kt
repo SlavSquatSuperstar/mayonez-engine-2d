@@ -22,22 +22,6 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     companion object {
 
         /**
-         * Creates an edge with the given center and length. The edge's
-         * direction points along the positive x-axis.
-         *
-         * @param center the center
-         * @param length the length
-         */
-        @JvmStatic
-        fun fromLength(center: Vec2, length: Float): Edge {
-            val halfLength = length * 0.5f
-            return Edge(
-                center - Vec2(halfLength, 0f),
-                center + Vec2(halfLength, 0f)
-            )
-        }
-
-        /**
          * Creates an edge with the given center, length, and angle. The edge's
          * direction points along the positive x-axis plus the given angle.
          *
@@ -46,7 +30,8 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
          * @param angle the angle in degrees
          */
         @JvmStatic
-        fun fromLength(center: Vec2, length: Float, angle: Float): Edge {
+        @JvmOverloads
+        fun fromLength(center: Vec2, length: Float, angle: Float = 0f): Edge {
             val halfDirection = Vec2(length * 0.5f, 0f).rotate(angle)
             return Edge(center - halfDirection, center + halfDirection)
         }
@@ -59,7 +44,8 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     val length = start.distance(end)
 
     /** The square of the edge's length, equal to `l^2`. */
-    private val lengthSq = length * length
+    private val lengthSq
+        get() = start.distanceSq(end)
 
     /**
      * A vector representation of this edge, equal to the end vertex minus the
@@ -137,28 +123,43 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
     /**
      * Calculates the distance from a point to this line segment.
      *
-     * @param point a point
+     * @param to the point to measure
      * @return the absolute distance the point to this line
      */
-    fun distance(point: Vec2): Float = point.distance(nearestPoint(point))
+    fun distance(to: Vec2): Float = to.distance(nearestPoint(to))
 
     override fun supportPoint(direction: Vec2): Vec2 {
         return if (start.dot(direction) > end.dot(direction)) start else end
     }
 
-    override fun nearestPoint(position: Vec2): Vec2 {
-        val projLength = position.sub(start).dot(toVector()) / length // find point shadow on line
-        if (projLength > length) // past line end
-            return end else if (projLength < 0) // behind line start
-            return start
-        return start.add(toVector().mul(projLength / length)) // inside line
+    /**
+     * Calculates the point inside this segment (including the endpoints) with
+     * the least distance to the given position.
+     *
+     * @param to the point to test
+     * @return the nearest point
+     */
+    override fun nearestPoint(to: Vec2): Vec2 {
+        // Project point on segment
+        val projLength = (to - start).dot(toVector()) / length
+        // Projection past segment end
+        return if (projLength > length) end
+        // Projection beind segment start
+        else if (projLength < 0) start
+        // Projection inside segment
+        else start + (toVector() * (projLength / length))
     }
 
     override fun contains(point: Vec2): Boolean {
-        if (point == start || point == end) return true // point is endpoint
-        val projLen = (point - start).component(end - start) // project v1->P onto v1->v2
-        if (projLen !in 0f..length) return false // point outside line
-        return point == start + (end - start) * (projLen / length)
+        // Point is an endpoint
+        if (point == start || point == end) return true
+        // Project point on segment
+        val startToPoint = point - start
+        val projLen = startToPoint.dot(toVector()) / length
+        // Projection outside segment
+        return if (projLen !in 0f..length) false
+        // Check if the point equals its projection (i.e. angle is zero)
+        else MathUtils.equals(projLen, startToPoint.len())
     }
 
     // Physical Properties

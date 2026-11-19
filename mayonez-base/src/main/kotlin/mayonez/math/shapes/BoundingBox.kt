@@ -65,9 +65,9 @@ open class BoundingBox(center: Vec2, size: Vec2) :
 
     // Rectangle vs Point
 
-    override fun nearestPoint(position: Vec2): Vec2 {
-        return if (position in this) position
-        else position.clampInbounds(min(), max())
+    override fun nearestPoint(to: Vec2): Vec2 {
+        return if (to in this) to
+        else to.clampInbounds(min(), max())
     }
 
     override fun contains(point: Vec2): Boolean {
