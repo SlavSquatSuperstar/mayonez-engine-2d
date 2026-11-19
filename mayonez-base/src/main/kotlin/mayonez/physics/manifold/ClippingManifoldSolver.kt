@@ -2,6 +2,7 @@ package mayonez.physics.manifold
 
 import mayonez.math.*
 import mayonez.math.shapes.*
+import mayonez.math.shapes.Polygon.Companion.prev
 import mayonez.physics.detection.*
 import kotlin.math.*
 
@@ -24,8 +25,8 @@ internal class ClippingManifoldSolver : ContactSolver {
         if (normal.dot(vecAB) < 0f) normal.set(-normal)
 
         // 2. Find the farthest features along normals
-        val feature1 = shape1.getFurthestFeature(normal)
-        val feature2 = shape2.getFurthestFeature(-normal)
+        val feature1 = shape1.getFarthestFeature(normal)
+        val feature2 = shape2.getFarthestFeature(-normal)
 
         // 3. Calculate contact points
         val collision = when {
@@ -50,17 +51,19 @@ internal class ClippingManifoldSolver : ContactSolver {
 
 // Feature Helper Methods
 
-private fun Shape.getFurthestFeature(direction: Vec2): Any {
-    return if (this is Polygon) this.getFurthestEdge(direction)
-    else this.supportPoint(direction)
+private fun Shape.getFarthestFeature(direction: Vec2): Any {
+    return when (this) {
+        is Polygon -> this.getFarthestEdge(direction)
+        else -> this.supportPoint(direction)
+    }
 }
 
-private fun Polygon.getFurthestEdge(direction: Vec2): Edge {
+private fun Polygon.getFarthestEdge(direction: Vec2): Edge {
     // Find the furthest vertex and check left and right edges
-    val dots = vertices.map { it.dot(direction) }.toFloatArray()
-    val farthest = MathUtils.maxIndex(*dots)
-    val leftEdge = edges[farthest] // use this edge index
-    val rightEdge = edges[if (farthest > 0) farthest - 1 else numVertices - 1]  // get previous edge index
+    val vertexDistances = vertices.map { it.dot(direction) }.toFloatArray()
+    val farthest = MathUtils.maxIndex(*vertexDistances)
+    val leftEdge = edges[farthest] // (v, v_next)
+    val rightEdge = edges[farthest.prev(numVertices)] // (v_prev, v)
 
     // Check which normal is more perpendicular
     return if (

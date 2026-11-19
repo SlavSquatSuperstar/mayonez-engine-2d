@@ -3,6 +3,8 @@ package mayonez.renderer.gl
 import mayonez.graphics.debug.*
 import mayonez.math.*
 import mayonez.math.shapes.*
+import mayonez.math.shapes.Polygon.Companion.next
+import mayonez.math.shapes.Polygon.Companion.prev
 
 // Helper Classes
 
@@ -71,13 +73,13 @@ internal fun MPolygon.getEdgeQuads(brush: ShapeBrush, zoom: Float): List<MPolygo
     // Get left faces
     val faces = this.edges.indices.map {
         val curr = this.edges[it]
-        val prev = this.edges[(it - 1 + this.numVertices) % this.numVertices]
+        val prev = this.edges[it.prev(this.numVertices)]
         // Cut the inner corners (miter joint)
         curr.getStartFace(prev, halfStroke)
     }
     return faces.indices.map {
         val start = faces[it] // Vertices 0, 3
-        val end = faces[(it + 1) % this.numVertices] // Vertices 1, 2
+        val end = faces[it.next(numVertices)] // Vertices 1, 2
         Quadrangle(start.outer, end.outer, end.inner, start.inner)
     }
 }

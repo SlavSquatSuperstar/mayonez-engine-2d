@@ -69,7 +69,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
      */
     override fun area(): Float {
         val crosses = FloatArray(numVertices) {
-            vertices[it].cross(vertices[(it + 1) % numVertices])
+            vertices[it].cross(vertices[it.next(numVertices)])
         }
         return 0.5f * abs(crosses.sum())
     }
@@ -94,7 +94,7 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
             var signedArea = 0f
             var center = Vec2()
             for (i in vertices.indices) {
-                val next = (i + 1) % numVertices
+                val next = i.next(numVertices)
                 val cross = vertices[i].cross(vertices[next])
                 signedArea += cross
                 center += (vertices[i] + vertices[next]) * cross
@@ -225,8 +225,15 @@ open class Polygon(sort: Boolean, vararg vertices: Vec2) : Shape() {
         }
 
         private fun Array<Vec2>.toEdges(): Array<Edge> {
-//            return Array(size) { Edge(this[(it + 1) % size], this[it]) }
-            return Array(size) { Edge(this[it], this[(it + 1) % size]) }
+            return Array(size) { Edge(this[it], this[it.next(size)]) }
+        }
+
+        internal fun Int.next(size: Int): Int {
+            return (this + 1) % size
+        }
+
+        internal fun Int.prev(size: Int): Int {
+            return (this - 1 + size) % size
         }
 
     }

@@ -1,6 +1,7 @@
 package mayonez.math.shapes
 
 import mayonez.math.*
+import mayonez.math.shapes.Polygon.Companion.next
 
 /**
  * Creates a convex hull, ordered counterclockwise, from an array of
@@ -30,7 +31,7 @@ private fun ArrayList<Vec2>.addConvexHullPoints(
     val numVertices = vertices.size
     var vStart = vFirst
     while (this.size <= numVertices) {
-        var vCurr = (vStart + 1) % numVertices // current most clockwise point (next point in hull)
+        var vCurr = vStart.next(numVertices) // current most clockwise point (next point in hull)
         for (i in vertices.indices) { // find the most clockwise point
             if (i == vStart || i == vCurr) continue
             // find the most clockwise point from current point
