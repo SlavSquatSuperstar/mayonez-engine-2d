@@ -73,7 +73,7 @@ internal class CollisionListener(val c1: CollisionBody, val c2: CollisionBody) {
         c2.onCollisionEvent(
             CollisionEvent(
                 (c1 as Collider), trigger, type,
-                direction?.unaryMinus(), velocity?.unaryMinus(), contacts
+                direction?.flip(), velocity?.flip(), contacts
             )
         )
     }

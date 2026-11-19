@@ -6,12 +6,14 @@ import java.util.*
 import kotlin.math.*
 
 /**
- * An ordered pair of two floats, x and y, that represents a point in the
- * xy-plane or a 2D vector with magnitude and direction.
+ * An ordered pair of two floats `(x, y)` that represents a point in the
+ * xy-plane or a vector in the xy-plane with magnitude and direction.
+ * Vectors may be visualized as arrows pointing from their tail to head.
+ * When a vector's tail is at the origin, then it also represents a point.
  *
  * @param x the x-component
  * @param y the y-component
- * @constructor Initialize this vector from an x and y value, to (x, y). *
+ * @constructor Initialize this vector from an x and y value, to `(x, y)`.
  * @author SlavSquatSuperstar
  */
 class Vec2(
@@ -30,15 +32,15 @@ class Vec2(
     constructor() : this(0f)
 
     /**
-     * Initialize this vector to have the same x and y components, to (n, a).
+     * Initialize this vector to have the same x and y components, to (`n, n`).
      *
-     * @param num the value for both x and y
+     * @param num the value for both the x- and y-components
      */
     constructor(num: Float) : this(num, num)
 
     /**
-     * Initialize this vector to copy another vector's x and y values, as (v_x,
-     * v_y)
+     * Initialize this vector to copy another vector's x and y values, to
+     * (`v.x, v.y`).
      *
      * @param v the vector to copy
      */
@@ -59,8 +61,8 @@ class Vec2(
     }
 
     /**
-     * Sets this vector's components to the given vector's components. Note:
-     * this method is a mutating method!
+     * Sets this vector's components to the given vector's components.
+     *
      *
      * @param v another 2D vector
      */
@@ -79,7 +81,8 @@ class Vec2(
     operator fun plus(v: Vec2): Vec2 = Vec2(this.x + v.x, this.y + v.y)
 
     /**
-     * Subtracts another vector from this vector.
+     * Subtracts another vector from this vector. To get the vector `AB` from
+     * point `A` to `B`, call `B - A` (*not* `A - B`).
      *
      * @param v another 2D vector
      * @return the vector difference
@@ -118,7 +121,7 @@ class Vec2(
     /**
      * Divides the components of this vector by the corresponding components
      * of another vector. If any components in the second vector is 0, the
-     * corresponding quotient component is 0.
+     * corresponding quotient component will be 0.
      *
      * @param v another vector with non-zero components
      * @return the divided vector
@@ -132,17 +135,25 @@ class Vec2(
     private fun Float.safeDivide(f: Float): Float = if (equals(f, 0f)) 0f else this / f
 
     /**
-     * Negates this vector.
+     * Negates this vector, rotating it by 180 degrees.
      *
-     * @return a new vector with this vector's components times -1
+     * @return a vector pointing in the opposite direction
      */
+    fun flip(): Vec2 = -this
     operator fun unaryMinus(): Vec2 = Vec2(-x, -y)
 
     // Special Vector Operations
 
     /**
-     * Multiplies the corresponding components of this vector and another
-     * vector.
+     * Computes the dot product of this vector and another equal to `a • b =
+     * a.x * b.x + a.y + b.y`. The dot product has several useful properties
+     * stemming from the identity `a • b = |a| * |b| * cos(θ)`, where `θ` is
+     * the smallest angle between the two vectors. The dot product is the most
+     * positive when both vectors are pointing in the same direction, and the
+     * most negative when both vectors are pointing in opposite directions.
+     * The dot product is zero when the two vectors are perpendicular. Both
+     * vectors are assumed to share the same origin. See also [project] and
+     * [component].
      *
      * @param v another vector
      * @return the dot product
@@ -150,9 +161,14 @@ class Vec2(
     fun dot(v: Vec2): Float = (this.x * v.x) + (this.y * v.y)
 
     /**
-     * Calculates the z-component of the cross product between this vector and
-     * another. The resulting z-component equals a.x * b.y - b.x * a.y, or the
-     * determinant of the matrix with this vector and the other as columns.
+     * Calculates the z-component (or length) of the cross product between this
+     * vector and another, equal to `|a × b| = a.x * b.y - b.x * a.y`. The
+     * cross product has several useful properties stemming from the identity
+     * `|a × b| = |a| * |b| * sin(θ)`, where `θ` is the smallest angle between
+     * the two vectors. The cross product has the largest magnitude when the
+     * vectors are perpendicular (with sign depending on handedness). The cross
+     * product has zero length when the vectors are parallel. Both vectors are
+     * assumed to share the same origin.
      *
      * @param v another vector
      * @return the cross product z-component
@@ -160,8 +176,8 @@ class Vec2(
     fun cross(v: Vec2): Float = (this.x * v.y) - (v.x * this.y)
 
     /**
-     * Returns the 2D vector of the cross product between this vector and
-     * z-component. The resulting vector equals (y*z, -x*z), or this vector's
+     * Returns the vector cross product between this vector and a z-component.
+     * The resulting vector equals `(y * z, -x * z)`, or this vector's
      * clockwise normal scaled by the given z-component.
      *
      * @param z a vector's z-component
@@ -197,55 +213,69 @@ class Vec2(
 
     /**
      * Projects this vector onto another vector, returning the components of
-     * this vector in the direction of another.
+     * this vector in the direction of another. Both vectors are assumed to
+     * share the same origin. If the projection has zero length, then the
+     * vectors are perpendicular to each other. See also [dot] and [component].
      *
-     * @param vOnto another vector
+     * @param onto another vector
      * @return the vector projection
      */
-    fun project(vOnto: Vec2): Vec2 = vOnto * (this.dot(vOnto) / vOnto.lenSq())
+    fun project(onto: Vec2): Vec2 = onto * (this.dot(onto) / onto.lenSq())
 
     /**
-     * Calculates the project length, or component, of this vector onto another
-     * vector.
+     * Calculates the component of this vector along another vector, or the
+     * length of its projection onto the other vector. Both vectors are assumed
+     * to share the same origin. See also [dot] and [project].
      *
-     * @param vOnto another vector
+     * @param onto another vector
      * @return the scalar projection
      */
-    fun component(vOnto: Vec2): Float = this.dot(vOnto) / vOnto.len()
+    fun component(onto: Vec2): Float = this.dot(onto) / onto.len()
 
     // Pythagorean Theorem / Length Methods
 
     /**
-     * Calculates the magnitude of this vector.
+     * Calculates the magnitude (length) of this vector, `|v| = √(x^2 + y^2)`.
+     * This function takes the square root, which is computationally expensive
+     * if only simple checks are required. See also [lenSq].
      *
-     * @return this vector's magnitude
+     * @return this vector's magnitude, always non-negative
      */
-    fun len(): Float = sqrt(lenSq())
+    fun len(): Float = sqrt((x * x) + (y * y))
 
     /**
-     * Calculates the magnitude squared of this vector (less CPU expensive than
-     * square root).
+     * Calculates the magnitude (length) squared of this vector, `|v|^2 =
+     * x^2 + y^2`. This function is less expensive than [len] while having
+     * several useful properties. If a vector's length squared equals zero,
+     * then the vector's length also equals zero. If two vectors have the same
+     * length squared, then they also have the same length. If one vector has a
+     * greater length squared than another, then the first vector is longer.
      *
-     * @return this vector's magnitude squared
+     * @return this vector's magnitude squared, always non-negative
      */
     fun lenSq(): Float = (x * x) + (y * y)
 
     /**
-     * Calculates the distance between the tips of this vector and another.
+     * Calculates the distance between the head of this vector and another.
+     * Both vectors are assumed to share the same origin. This function takes
+     * the square root, which is computationally expensive if only simple
+     * checks are required. See also [distanceSq].
      *
-     * @param v a 2D vector
-     * @return the distance
+     * @param to a vector
+     * @return the distance, always non-negative
      */
-    fun distance(v: Vec2): Float = sqrt(distanceSq(v))
+    fun distance(to: Vec2): Float = (to - this).len()
 
     /**
-     * Calculates the distance squared between the tips of this vector and
-     * another.
+     * Calculates the distance squared between the heads of this vector and
+     * another. Both vectors are assumed to share the same origin. This
+     * function is less expensive than [distance] while having several useful
+     * properties (see [lenSq] for an explanation).
      *
-     * @param v a 2D vector
-     * @return the distance squared
+     * @param to a vector
+     * @return the distance squared, always non-negative
      */
-    fun distanceSq(v: Vec2): Float = (v - this).lenSq()
+    fun distanceSq(to: Vec2): Float = (to - this).lenSq()
 
     /**
      * Creates a vector with the same direction as this but with a length
@@ -295,7 +325,8 @@ class Vec2(
 
     /**
      * Calculates the positive counterclockwise angle in degrees between this
-     * vector and another, between 0 and 360 degrees.
+     * vector and another, between 0 and 360 degrees. Both vectors are assumed
+     * to start at the origin.
      *
      * @param v another vector
      * @return the angle between the two vectors
@@ -306,12 +337,17 @@ class Vec2(
     }
 
     /**
-     * Rotates this vector counterclockwise by a given angle around the origin (0, 0).
+     * Rotates this vector counterclockwise by a given angle around the origin
+     * (0, 0).
      *
      * @param degrees the angle, in degrees counterclockwise
      * @return the rotated vector
      */
-    fun rotate(degrees: Float): Vec2 = rotate(degrees, Vec2())
+    fun rotate(degrees: Float): Vec2 {
+        // Trivial rotation
+        return if (equals(degrees % MAX_ANGLE_DEGREES, 0f)) Vec2(this)
+        else Mat22(degrees) * this
+    }
 
     /**
      * Rotates this vector counterclockwise by a given angle around the given origin point.
@@ -321,10 +357,10 @@ class Vec2(
      * @return the rotated vector
      */
     fun rotate(degrees: Float, origin: Vec2): Vec2 {
-        if (this == origin || equals(degrees % MAX_ANGLE_DEGREES, 0f)) return Vec2(this) // Trivial
-        val localPos = this - origin // Translate the vector space to the origin
-        val rot = Mat22(degrees) // Rotate the point around the new origin
-        return (rot * localPos) + origin // Revert the vector space to the old point
+        // Trivial rotation
+        return if (this == origin || equals(degrees % MAX_ANGLE_DEGREES, 0f)) Vec2(this)
+        // Translate to vector space to origin, rotate, then translate back
+        else (Mat22(degrees) * (this - origin)) + origin
     }
 
     /**
