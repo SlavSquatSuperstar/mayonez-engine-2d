@@ -8,7 +8,7 @@ import mayonez.math.shapes.Rectangle;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.DestroyAfterDuration;
-import slavsquatsuperstar.demos.ShapeUtils;
+import slavsquatsuperstar.demos.RandomShapeGenerator;
 
 /**
  * Creates prefab physics sandbox objects.
@@ -19,8 +19,10 @@ final class SandboxObjectPrefabs {
 
     private static final float MIN_LENGTH = 4f;
     private static final float MAX_LENGTH = 10f;
-    private static final float MIN_RADIUS = MIN_LENGTH / 2f;
-    private static final float MAX_RADIUS = MAX_LENGTH / 2f;
+
+    private static final RandomShapeGenerator gen = new RandomShapeGenerator(
+            Vec2::new, () -> 0f, () -> Random.randomFloat(MIN_LENGTH, MAX_LENGTH)
+    );
 
     private SandboxObjectPrefabs() {
     }
@@ -74,10 +76,10 @@ final class SandboxObjectPrefabs {
     private static Collider getColliderFromType(int type) {
         Collider col;
         switch (type) {
-            case 1 -> col = new Collider(ShapeUtils.getRandomRectangle(new Vec2(), MIN_LENGTH, MAX_LENGTH));
-            case 2 -> col = new Collider(ShapeUtils.getRandomEllipse(new Vec2(), MIN_LENGTH, MAX_LENGTH));
-            case 3 -> col = new Collider(ShapeUtils.getRandomPolygon(new Vec2(), MIN_RADIUS, MAX_RADIUS));
-            case 4 -> col = new Collider(ShapeUtils.getRandomEdge(new Vec2(), MIN_LENGTH, MAX_LENGTH));
+            case 1 -> col = new Collider(gen.getRandomRectangle());
+            case 2 -> col = new Collider(gen.getRandomEllipse());
+            case 3 -> col = new Collider(gen.getRandomPolygon());
+            case 4 -> col = new Collider(gen.getRandomEdge());
             default -> col = new Collider(new Rectangle(new Vec2(1f)));
         }
         return col;

@@ -8,7 +8,7 @@ import mayonez.graphics.ui.*;
 import mayonez.input.KeyInput;
 import mayonez.math.*;
 import slavsquatsuperstar.demos.DemoScene;
-import slavsquatsuperstar.demos.ShapeUtils;
+import slavsquatsuperstar.demos.RandomShapeGenerator;
 
 import java.util.List;
 
@@ -19,27 +19,30 @@ import java.util.List;
  */
 public class DebugDrawTestScene extends DemoScene {
 
+    // Shape Generation
     private static final Vec2 SCENE_HALF_SIZE
             = new Vec2(Mayonez.getScreenWidth(), Mayonez.getScreenHeight())
             .div(2f);
-    private static final Color BACKGROUND_COLOR
-            = new Color(192, 192, 192, 220);
     private static final int SHAPE_AMOUNT = 500;
-
     private static final float MIN_LENGTH = 8f;
     private static final float MAX_LENGTH = 32f;
+    private static final RandomShapeGenerator gen = new RandomShapeGenerator(
+            DebugDrawTestScene::getRandomPosition,
+            Random::randomAngle,
+            () -> Random.randomFloat(MIN_LENGTH, MAX_LENGTH)
+    );
+
+    // Rendering
+    private static final Color BACKGROUND_COLOR
+            = new Color(192, 192, 192, 220);
     private static final int MIN_STROKE = 1;
     private static final int MAX_STROKE = 3;
 
     private final List<DebugShapeType> types = List.of(
-            new DebugShapeType("Balls", () -> ShapeUtils
-                    .getRandomEllipse(getRandomPosition(), MIN_LENGTH, MAX_LENGTH)),
-            new DebugShapeType("Boxes", () -> ShapeUtils
-                    .getRandomRectangle(getRandomPosition(), MIN_LENGTH, MAX_LENGTH)),
-            new DebugShapeType("Polys", () -> ShapeUtils
-                    .getRandomPolygon(getRandomPosition(), MIN_LENGTH / 2f, MAX_LENGTH / 2f)),
-            new DebugShapeType("Lines", () -> ShapeUtils
-                    .getRandomEdge(getRandomPosition(), MIN_LENGTH, MAX_LENGTH))
+            new DebugShapeType("Balls", gen::getRandomEllipse),
+            new DebugShapeType("Boxes", gen::getRandomRectangle),
+            new DebugShapeType("Polys", gen::getRandomPolygon),
+            new DebugShapeType("Lines", gen::getRandomEdge)
     );
 
     private TextLabel totalText;

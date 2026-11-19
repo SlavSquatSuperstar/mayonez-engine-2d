@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  *
  * @author SlavSquatSuperstar
  */
-public class DebugShapeType {
+class DebugShapeType {
 
     private final String name;
     private final Supplier<Shape> generator;

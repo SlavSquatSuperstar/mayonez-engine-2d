@@ -4,6 +4,8 @@ import mayonez.math.Random;
 import mayonez.math.Vec2;
 import mayonez.math.shapes.*;
 
+import java.util.function.Supplier;
+
 import static mayonez.math.Random.*;
 
 /**
@@ -11,28 +13,45 @@ import static mayonez.math.Random.*;
  *
  * @author SlavSquatSuperstar
  */
-public final class ShapeUtils {
+public class RandomShapeGenerator {
 
-    private ShapeUtils() {
+    private final Supplier<Vec2> positionGenerator;
+    private final Supplier<Float> angleGenerator, lengthGenerator;
+
+    /**
+     * Creates a random shape generator with the given position, angle, and
+     * length generator functions. The position is usually the center of a
+     * shape. The angle is the rotation of shape. The length may be used as the
+     * width and height of a shape. Alternatively, half the length may be used
+     * as the radius, or roughly the distance from the center to any one of a
+     * shape's vertices.
+     *
+     * @param positionGenerator the position (x, y) generator
+     * @param angleGenerator    the angle (theta) generator
+     * @param lengthGenerator   the length (l) generator
+     */
+    public RandomShapeGenerator(
+            Supplier<Vec2> positionGenerator,
+            Supplier<Float> angleGenerator,
+            Supplier<Float> lengthGenerator
+    ) {
+        this.positionGenerator = positionGenerator;
+        this.angleGenerator = angleGenerator;
+        this.lengthGenerator = lengthGenerator;
     }
 
     /**
      * Generates an ellipse with a random rotation and a 25% chance of being a
      * circle.
      *
-     * @param center      the center
-     * @param minDiameter the minimum diameter
-     * @param maxDiameter the maximum diameter
      * @return the ellipse
      */
-    public static Ellipse getRandomEllipse(Vec2 center, float minDiameter, float maxDiameter) {
+    public Ellipse getRandomEllipse() {
         var isCircle = randomPercent(0.25f);
         if (isCircle) {
-            var radius = Random.randomFloat(minDiameter, maxDiameter) / 2f;
-            return new Circle(center, radius);
+            return new Circle(center(), radius());
         } else {
-            var size = Random.randomVector(minDiameter, maxDiameter, minDiameter, maxDiameter);
-            return new Ellipse(center, size, randomAngle());
+            return new Ellipse(center(), size(), angle());
         }
     }
 
@@ -40,46 +59,35 @@ public final class ShapeUtils {
      * Generates a rectangle with a random rotation with a 25% chance of being
      * a square.
      *
-     * @param center    the center
-     * @param minLength the minimum side length
-     * @param maxLength the maximum side length
      * @return the rectangle
      */
-    public static Rectangle getRandomRectangle(Vec2 center, float minLength, float maxLength) {
+    public Rectangle getRandomRectangle() {
         var isSquare = randomPercent(0.25f);
-        Vec2 size;
         if (isSquare) {
-            size = new Vec2(randomFloat(minLength, maxLength));
+            return new Rectangle(center(), new Vec2(length()), angle());
         } else {
-            size = Random.randomVector(minLength, maxLength, minLength, maxLength);
+            return new Rectangle(center(), size(), angle());
         }
-        return new Rectangle(center, size, randomAngle());
     }
 
     /**
      * Generates an arbitrary triangle with a random rotation and a 25% chance
-     * of being an equilateral triangle. The radius is roughly the distance
-     * from the center to any of the vertices.
+     * of being an equilateral triangle.
      *
-     * @param center    the center
-     * @param minRadius the minimum radius
-     * @param maxRadius the maximum radius
      * @return the triangle
      */
-    public static Triangle randomTriangle(Vec2 center, float minRadius, float maxRadius) {
+    public Triangle randomTriangle() {
         Triangle triangle;
         var equilateral = randomPercent(0.25f);
         if (equilateral) {
-            triangle = new Triangle(
-                    center, randomFloat(minRadius, maxRadius)
-            );
+            triangle = new Triangle(center(), radius());
         } else {
-            triangle = randomTriangleInscribed(center, minRadius, maxRadius);
+            triangle = randomTriangleInscribed();
         }
-        return triangle.rotate(0, null);
+        return triangle.rotate(angle(), null);
     }
 
-    private static Triangle randomTriangleInscribed(Vec2 center, float minRadius, float maxRadius) {
+    private Triangle randomTriangleInscribed() {
         /*
          * Inscribe a triangle inside a circle with the given circumcenter,
          * which should somewhat equal the triangle's centroid. To ensure the
@@ -100,23 +108,19 @@ public final class ShapeUtils {
         var totalAngle = 0f;
         for (int i = 0; i < vertices.length; i++) {
             // Use origin as initial circumcenter
-            var radius = randomFloat(minRadius, maxRadius);
             totalAngle += angles[i];
-            vertices[i] = new Vec2(radius, 0f).rotate(totalAngle);
+            vertices[i] = new Vec2(radius(), 0f).rotate(totalAngle);
         }
-        return new Triangle(vertices[0], vertices[1], vertices[2]).translate(center);
+        return new Triangle(vertices[0], vertices[1], vertices[2]).translate(center());
     }
 
     /**
      * Generates an arbitrary convex quadrilateral with a random rotation. The
      * radius is roughly the distance from the center to any of the vertices.
      *
-     * @param center    the center
-     * @param minRadius the minimum radius
-     * @param maxRadius the maximum radius
      * @return the rectangle
      */
-    public static Polygon randomQuadrilateral(Vec2 center, float minRadius, float maxRadius) {
+    public Polygon randomQuadrilateral() {
         /*
          * To ensure the generated shape is convex, use two intersecting
          * diagonals to define the vertices. Move each of the diagonals
@@ -128,7 +132,7 @@ public final class ShapeUtils {
         // Lengths from the center to the vertices
         var radii = new float[4];
         for (int i = 0; i < radii.length; i++) {
-            radii[i] = randomFloat(minRadius, maxRadius);
+            radii[i] = radius();
         }
         var diagonal1 = new Edge(new Vec2(radii[0], 0), new Vec2(-radii[2], 0));
         var diagonal2 = new Edge(new Vec2(0, radii[1]), new Vec2(0, -radii[3]))
@@ -136,61 +140,68 @@ public final class ShapeUtils {
         return new Polygon(
                 diagonal1.getStart(), diagonal1.getEnd(),
                 diagonal2.getStart(), diagonal2.getEnd()
-        ).translate(center);
+        ).translate(center());
     }
 
     /**
      * Generates a regular polygon with 5-8 sides and a random rotation. The
      * radius is roughly the distance from the center to any of the vertices.
      *
-     * @param center    the center
-     * @param minRadius the minimum radius
-     * @param maxRadius the maximum radius
      * @return the polygon
      */
-    public static Polygon randomRegularPolygon(Vec2 center, float minRadius, float maxRadius) {
+    public Polygon randomRegularPolygon() {
         return new Polygon(
-                center, Random.randomInt(5, 8),
-                randomFloat(minRadius, maxRadius)
-        ).rotate(randomAngle(), null);
+                center(), Random.randomInt(5, 8), radius()
+        ).rotate(angle(), null);
     }
 
     /**
      * Generates an arbitrary polygon with 3-8 sides and a random rotation. The
      * resulting shape has a 30% chance of being a triangle, 30% of being a
-     * quadrilateral, and a 40% chance of being some other polygon. The radius
-     * is roughly the distance from the center to any of the vertices.
+     * quadrilateral, and a 40% chance of being some other polygon.
      *
-     * @param center    the center
-     * @param minRadius the minimum radius
-     * @param maxRadius the maximum radius
      * @return the polygon
      */
-    public static Polygon getRandomPolygon(Vec2 center, float minRadius, float maxRadius) {
+    public Polygon getRandomPolygon() {
         var rand = Random.randomFloat();
         if (rand < 0.30f) {
-            return ShapeUtils
-                    .randomTriangle(center, minRadius, maxRadius);
+            return randomTriangle();
         } else if (rand < 0.60f) {
-            return ShapeUtils
-                    .randomQuadrilateral(center, minRadius, maxRadius);
+            return randomQuadrilateral();
         } else {
-            return ShapeUtils
-                    .randomRegularPolygon(center, minRadius, maxRadius);
+            return randomRegularPolygon();
         }
     }
 
     /**
      * Generate a random edge (line segment) with a random rotation.
      *
-     * @param center    the center
-     * @param minLength the minimum length
-     * @param maxLength the maximum length
      * @return the edge
      */
-    public static Edge getRandomEdge(Vec2 center, float minLength, float maxLength) {
-        var length = Random.randomFloat(minLength, maxLength);
-        return Edge.fromLength(center, length, Random.randomAngle());
+    public Edge getRandomEdge() {
+        return Edge.fromLength(center(), length(), angle());
+    }
+
+    // Helper Functions
+
+    private Vec2 center() {
+        return positionGenerator.get();
+    }
+
+    private float angle() {
+        return angleGenerator.get();
+    }
+
+    private float length() {
+        return lengthGenerator.get();
+    }
+
+    private Vec2 size() {
+        return new Vec2(length(), length());
+    }
+
+    private float radius() {
+        return length() * 0.5f;
     }
 
 }
