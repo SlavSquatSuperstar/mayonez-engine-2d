@@ -5,7 +5,10 @@ import java.util.*
 import kotlin.math.*
 
 /**
- * A line segment defined by two endpoints and inside the 2D plane.
+ * A line segment defined by two endpoints inside the 2D plane. An `Edge` can
+ * be used to model collision for the ground or a wall, but using a thin
+ * [Rectangle] is recommended for more accurate collision detection against
+ * fast-moving objects.
  *
  * @constructor Constructs an edge with the given endpoints. See also
  *     [fromLength].

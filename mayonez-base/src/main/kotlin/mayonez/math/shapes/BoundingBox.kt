@@ -4,9 +4,10 @@ import mayonez.math.*
 import java.util.*
 
 /**
- * A non-rotatable, axis-oriented bounding box (AABB) with four edges and
- * defined by a width and height. Not to be used with a collider. For
- * rotatable rectangle, use the [Rectangle] class.
+ * A non-rotatable axis-oriented bounding box (AABB) with four edges and
+ * defined by a width, height, and center. Not to be used with a collider. For
+ * a rotatable rectangle or to represent an object-oriented bounding box (OBB),
+ * use the [Rectangle] class.
  *
  * @constructor Constructs a bounding box with the given center, and size.
  * @param center the center

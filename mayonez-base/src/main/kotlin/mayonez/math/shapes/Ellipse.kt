@@ -5,9 +5,11 @@ import java.util.*
 import kotlin.math.*
 
 /**
- * A round shape defined by a major and minor radius and containing two
- * focal points. For each point on the ellipse's boundary curve, the sum of
- * the distances to the foci is constant.
+ * A round shape defined by a center, width, and height. The dimensions can be
+ * used to calculate the ellipse's two focal points and eccentricity. For each
+ * point on the ellipse's boundary curve, the sum of the distances to the foci
+ * is constant. An ellipse with zero eccentricity (i.e. equal width and height)
+ * is a circle.
  *
  * Note: Despite both shapes being round, the `Ellipse` class is much slower
  * to check collisions than [Circle]. Use [Circle] if the collider will never
@@ -15,7 +17,7 @@ import kotlin.math.*
  *
  * @constructor Constructs an ellipse with the given center, size, and angle.
  * @param center the center
- * @param size the size
+ * @param size the size (diameters; not radii)
  * @param angle the angle in degrees
  *
  * @author SlavSquatSuperstar
@@ -26,7 +28,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
      * Constructs an ellipse with the given center and size and rotation of 0.
      *
      * @param center the center
-     * @param size the size
+     * @param size the size (diameters; not radii)
      */
     constructor(center: Vec2, size: Vec2) : this(center, size, 0f)
 
@@ -34,7 +36,7 @@ open class Ellipse(protected val center: Vec2, val size: Vec2, val angle: Float)
      * Constructs an ellipse with the given size centered at (0, 0) and with a
      * rotation of 0.
      *
-     * @param size the size
+     * @param size the size (diameters; not radii)
      */
     constructor(size: Vec2) : this(Vec2(), size, 0f)
 

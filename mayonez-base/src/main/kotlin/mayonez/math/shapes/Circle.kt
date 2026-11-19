@@ -13,7 +13,7 @@ import java.util.*
  *
  * @constructor Constructs a circle with the given center and radius.
  * @param center the center
- * @radius radius the radius
+ * @param radius the radius (not diameter)
  *
  * @author SlavSquatSuperstar
  */
@@ -26,7 +26,7 @@ class Circle(
     /**
      * Constructs a circle with the given radius centered at (0, 0).
      *
-     * @param radius the radius
+     * @param radius the radius (not diameter)
      */
     constructor(radius: Float) : this(Vec2(), radius)
 

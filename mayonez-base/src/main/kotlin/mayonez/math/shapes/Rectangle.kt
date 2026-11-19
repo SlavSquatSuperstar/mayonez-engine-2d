@@ -4,11 +4,12 @@ import mayonez.math.*
 import java.util.*
 
 /**
- * A rotatable box shape (OBB) defined by a width and height. Rectangles
- * are four-sided polygons with two pairs of parallel edges and containing
- * all right angles. See also [fromMinAndMax].
+ * A rotatable box defined by center, width, and height. Rectangles are
+ * four-sided polygons with two pairs of parallel edges and containing all
+ * right angles. For a non-rotatable box, use the [BoundingBox] class.
  *
  * @constructor Constructs a rectangle with the given center, size, and angle.
+ *     See also [fromMinAndMax].
  * @param center the center
  * @param size the size
  * @param angle the angle in degrees
