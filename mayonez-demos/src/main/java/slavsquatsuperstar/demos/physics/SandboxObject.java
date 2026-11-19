@@ -68,6 +68,11 @@ class SandboxObject extends Node {
                 super.start();
                 getPhysicsBody().addVelocity(initialVelocity);
             }
+
+            @Override
+            public void onCollisionEvent(CollisionEvent event) {
+                shapeSprite.setContacts(event.contacts);
+            }
         };
         sandboxComponents.add(collider);
         sandboxComponents.add(shapeSprite);
