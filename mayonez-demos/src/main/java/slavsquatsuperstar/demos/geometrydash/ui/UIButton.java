@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.colliders.*;
 import mayonez.scripts.mouse.*;
 import slavsquatsuperstar.demos.geometrydash.ZIndex;
@@ -48,7 +49,7 @@ public class UIButton extends Node {
     @Override
     protected void init() {
         selected = false;
-        addChild(new BoxCollider(new Vec2(1, 1)).setTrigger(true));
+        addChild(new Collider(new Rectangle(new Vec2(1, 1))).setTrigger(true));
         addChild(baseSprite);
 
         var iconSpr = Sprites.createSprite(icon);

@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.camera.*;
@@ -93,7 +94,7 @@ public class MarioScene extends DemoScene {
             protected void init() {
                 addTag(MarioScene.GROUND_TAG);
                 addChild(new Rigidbody(0f));
-                addChild(new BoxCollider(size));
+                addChild(new Collider(new Rectangle(size)));
             }
         };
     }

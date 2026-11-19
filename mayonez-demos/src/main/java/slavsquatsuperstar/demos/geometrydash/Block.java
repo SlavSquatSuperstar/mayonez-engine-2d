@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 
@@ -25,7 +26,7 @@ public class Block extends Node {
     @Override
     protected void init() {
         addChild(Sprites.createSprite(cursorTexture));
-        addChild(new BoxCollider(new Vec2(1f)));
+        addChild(new Collider(new Rectangle(new Vec2(1f))));
         addChild(new Rigidbody(0f).setFixedRotation(true));
     }
 

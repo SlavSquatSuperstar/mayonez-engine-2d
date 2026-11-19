@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.mario;
 import mayonez.*;
 import mayonez.input.KeyInput;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.CollisionEvent;
 import mayonez.physics.CollisionEventType;
 import mayonez.physics.colliders.*;
@@ -41,7 +42,7 @@ class Mario extends Node {
         var sprite = MarioScene.SPRITES.getSprite(0);
         sprite.setZIndex(1);
         addChild(sprite);
-        addChild(new BoxCollider(new Vec2(0.8f, 1)) {
+        addChild(new Collider(new Rectangle(new Vec2(0.8f, 1))) {
             @Override
             public void onCollisionEvent(CollisionEvent event) {
                 if (!event.trigger

@@ -5,6 +5,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.input.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.*;
@@ -39,7 +40,7 @@ class GDPlayer extends Node {
         // Player Avatar
         addSpriteLayers();
 
-        addChild(new BoxCollider(new Vec2(1, 1)));
+        addChild(new Collider(new Rectangle(new Vec2(1, 1))));
         addChild(new Rigidbody(1f).setDrag(0.2f).setFixedRotation(true));
 
         var halfSize = GDEditorScene.SCENE_SIZE.mul(0.5f);

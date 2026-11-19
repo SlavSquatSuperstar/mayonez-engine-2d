@@ -3,6 +3,7 @@ package slavsquatsuperstar.demos.spacegame.objects.ships;
 import mayonez.*;
 import mayonez.graphics.sprites.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
@@ -45,7 +46,7 @@ public class Satellite extends Node {
         // Collision
         var cd = new CollisionDamage();
         addChild(cd);
-        var collider = new BoxCollider(properties.colliderSize()) {
+        var collider = new Collider(new Rectangle(properties.colliderSize())) {
             @Override
             public void onCollisionEvent(CollisionEvent event) {
                 cd.onObjectCollision(event); // On collision

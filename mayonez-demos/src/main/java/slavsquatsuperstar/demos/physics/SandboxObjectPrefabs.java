@@ -3,6 +3,8 @@ package slavsquatsuperstar.demos.physics;
 import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Ellipse;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.DestroyAfterDuration;
@@ -25,7 +27,7 @@ final class SandboxObjectPrefabs {
 
     static SandboxObject createBall(Vec2 position, Vec2 size, PhysicsMaterial material) {
         return new SandboxObject("Ball", position, 0f)
-                .addPhysics(new BallCollider(size), Colors.BLUE, material)
+                .addPhysics(new Collider(new Ellipse(new Vec2(size))), Colors.BLUE, material)
                 .addMouseMovement();
     }
 
@@ -33,7 +35,7 @@ final class SandboxObjectPrefabs {
             Vec2 position, Vec2 size, float rotation, PhysicsMaterial material
     ) {
         return new SandboxObject("Box", position, rotation)
-                .addPhysics(new BoxCollider(size), Colors.ORANGE, material)
+                .addPhysics(new Collider(new Rectangle(size)), Colors.ORANGE, material)
                 .addMouseMovement();
     }
 
@@ -41,7 +43,7 @@ final class SandboxObjectPrefabs {
             String name, Vec2 position, Vec2 size, float rotation, PhysicsMaterial material
     ) {
         return new SandboxObject(name, position, rotation)
-                .addStaticPhysics(new BoxCollider(size), material);
+                .addStaticPhysics(new Collider(new Rectangle(size)), material);
     }
 
     static Node createRandomShape(Vec2 position, int type) {
@@ -72,11 +74,11 @@ final class SandboxObjectPrefabs {
     private static Collider getColliderFromType(int type) {
         Collider col;
         switch (type) {
-            case 1 -> col = new BoxCollider(Random.randomVector(new Vec2(MIN_LENGTH), new Vec2(MAX_LENGTH)));
-            case 2 -> col = new BallCollider(Random.randomVector(new Vec2(MIN_LENGTH), new Vec2(MAX_LENGTH)));
-            case 3 -> col = new PolygonCollider(ShapeUtils.getRandomPolygon(new Vec2(), MIN_RADIUS, MAX_RADIUS).getVertices());
-            case 4 -> col = new EdgeCollider(Random.randomFloat(MIN_LENGTH, MAX_LENGTH));
-            default -> col = new BoxCollider(new Vec2(1f));
+            case 1 -> col = new Collider(ShapeUtils.getRandomRectangle(new Vec2(), MIN_LENGTH, MAX_LENGTH));
+            case 2 -> col = new Collider(ShapeUtils.getRandomEllipse(new Vec2(), MIN_LENGTH, MAX_LENGTH));
+            case 3 -> col = new Collider(ShapeUtils.getRandomPolygon(new Vec2(), MIN_RADIUS, MAX_RADIUS));
+            case 4 -> col = new Collider(ShapeUtils.getRandomEdge(new Vec2(), MIN_LENGTH, MAX_LENGTH));
+            default -> col = new Collider(new Rectangle(new Vec2(1f)));
         }
         return col;
     }

@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
@@ -57,7 +58,7 @@ public class TestProjectile extends Node {
             getScene().addNode(new Node("Trail", getTransform().copy()) {
                 @Override
                 protected void init() {
-                    var collider = new BoxCollider(ProjectileLauncher.PROJ_SIZE);
+                    var collider = new Collider(new Rectangle(ProjectileLauncher.PROJ_SIZE));
                     collider.setLayer(getScene().getLayer(ProjectileTestScene.PROJECTILE_LAYER));
                     addChild(collider);
                     addChild(new ShapeSprite(Colors.LIGHT_BLUE, false));

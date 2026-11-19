@@ -6,6 +6,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.sprites.*;
 import mayonez.graphics.textures.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Ellipse;
 import mayonez.physics.CollisionEvent;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
@@ -47,7 +48,7 @@ public abstract class Asteroid extends Node {
     }
 
     protected void addCollider(EventListener<CollisionEvent> listener) {
-        var collider = new BallCollider(new Vec2(1f)) {
+        var collider = new Collider(new Ellipse(new Vec2(1f))) {
             @Override
             public void onCollisionEvent(CollisionEvent event) {
                 listener.onEvent(event);

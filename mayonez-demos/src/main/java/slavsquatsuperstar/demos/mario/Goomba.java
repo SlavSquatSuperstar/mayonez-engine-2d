@@ -2,6 +2,7 @@ package slavsquatsuperstar.demos.mario;
 
 import mayonez.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.CollisionEvent;
 import mayonez.physics.CollisionEventType;
 import mayonez.physics.colliders.*;
@@ -32,7 +33,7 @@ class Goomba extends Node {
         addTag(MarioScene.CHARACTERS_TAG);
         addChild(MarioScene.SPRITES.getSprite(spriteIndex));
 
-        addChild(new BoxCollider(new Vec2(0.8f, 1)) {
+        addChild(new Collider(new Rectangle(new Vec2(0.8f, 1))) {
             @Override
             public void onCollisionEvent(CollisionEvent event) {
                 if (!event.trigger

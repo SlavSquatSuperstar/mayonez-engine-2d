@@ -5,6 +5,7 @@ import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.Random;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import slavsquatsuperstar.demos.DemoScene;
@@ -81,7 +82,7 @@ public class PoolBallsScene extends DemoScene {
         return new Node(name, new Transform(position)) {
             @Override
             protected void init() {
-                addChild(new BoxCollider(size));
+                addChild(new Collider(new Rectangle(size)));
                 addChild(new Rigidbody(0f).setMaterial(WALL_MAT));
                 addChild(new ShapeSprite(Colors.DARK_GRAY, true));
             }

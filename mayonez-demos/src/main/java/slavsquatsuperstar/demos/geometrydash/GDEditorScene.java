@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.camera.*;
@@ -38,7 +39,7 @@ public class GDEditorScene extends DemoScene {
             protected void init() {
                 setZIndex(ZIndex.BLOCK);
                 addChild(new Rigidbody(0f).setFixedRotation(true));
-                addChild(new BoxCollider(new Vec2(size.x + 2f, 2f)));
+                addChild(new Collider(new Rectangle(new Vec2(size.x + 2f, 2f))));
                 addChild(new ShapeSprite(Colors.BLACK, true));
             }
         });

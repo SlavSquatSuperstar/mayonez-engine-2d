@@ -5,8 +5,9 @@ import mayonez.graphics.Colors;
 import mayonez.graphics.debug.ShapeSprite;
 import mayonez.input.*;
 import mayonez.math.Vec2;
+import mayonez.math.shapes.Rectangle;
 import mayonez.physics.*;
-import mayonez.physics.colliders.BoxCollider;
+import mayonez.physics.colliders.Collider;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.Counter;
 
@@ -29,7 +30,7 @@ public class TargetBox extends Node {
         flashCounter = new Counter(0, 10, 10);
 
         addChild(new Rigidbody(0f).setMaterial(PhysicsMaterial.DEFAULT_MATERIAL));
-        addChild(new BoxCollider(new Vec2(10f, 12f)) {
+        addChild(new Collider(new Rectangle(new Vec2(10f, 12f))) {
             @Override
             protected void init() {
                 setLayer(getScene().getLayer(ProjectileTestScene.TARGET_LAYER));

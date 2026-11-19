@@ -4,6 +4,7 @@ import mayonez.*;
 import mayonez.graphics.*;
 import mayonez.graphics.debug.*;
 import mayonez.math.*;
+import mayonez.math.shapes.Circle;
 import mayonez.physics.colliders.*;
 import mayonez.physics.dynamics.*;
 import mayonez.scripts.mouse.*;
@@ -56,7 +57,7 @@ class PoolBall extends Node {
 
     @Override
     protected void init() {
-        addChild(new BallCollider(BALL_RADIUS));
+        addChild(new Collider(new Circle(BALL_RADIUS)));
         if (solid) {
             addChild(new ShapeSprite(color, true));
         } else {
