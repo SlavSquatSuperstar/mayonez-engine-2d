@@ -1,5 +1,48 @@
 # Mayonez Engine Changelog
 
+## v0.8.4-snapshot2
+
+Nodes use base Collider
+
+### Features
+
+- (Demos): Print more debug info in CirclesTestScene
+- (Demos): Add and remove shapes in CirclesTestScene
+- (Demos): Draw rectangles and polygons in CirclesTestScene
+- (Math): Create no-arg Random.randomFloat method
+- (Math): Rename Random.randomRange method to Random.randomFloat
+- (Demos): Generate irregular triangles and quadrilaterals
+- (Demos): PhysicsSandboxScene generates random shapes
+- (Math): Add Rectangle/Ellipse size/halfSize properties
+- (Demos): Draw contacts for SandboxObject
+
+### Refactor
+
+- (Demos): Rename CirclesTestScene to DebugDrawTestScene
+- (Demos): Extract DebugShapeType helper class
+- (Graphics): Make DebugShape record public
+- (Graphics): Tweak debug graphics Javadoc and dataflow
+- (Demos): Create random shape methods with ShapeUtils
+- (Math): Delete Shape.numVertices abstract property
+- (Math): Delete Shape.boundingCircle method
+- (Math): Rename Shape.boundingRectangle to boundingBox
+- (Math): Remove Ellipse circumference method
+- (Math): Add Shape convenience constructors
+- (Physics): Collider takes shape parameter
+- (Physics): Collider base class is no longer abstract
+- BREAKING CHANGE (Physics): Delete Collider subclasses and use base Collider
+- (Demos): Rename ShapeUtils to RandomShapeGenerator and make instantiable
+- (Demos): Merge SandboxObjectPrefabs with SandboxObject
+
+### Fixes
+
+- (Graphics): Sprite classes use own z-index value
+
+### Documentation
+
+- (Graphics): Update ShapeSprite Javadoc
+- (Math) Update and format Shape Javadoc
+
 ## v0.8.4-snapshot1
 
 Node global transforms
