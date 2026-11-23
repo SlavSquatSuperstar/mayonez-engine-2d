@@ -3,9 +3,6 @@ package mayonez.physics.detection
 import mayonez.math.*
 import mayonez.math.shapes.*
 
-const val MAX_GJK_ITERATIONS: Int = 20
-
-
 /**
  * Detects if two shapes overlap using a modified GJK (Gilbert-Johnson-Keerthi)
  * distance algorithm. This class uses an [EPASolver] to find the penetration
@@ -26,14 +23,20 @@ const val MAX_GJK_ITERATIONS: Int = 20
  * - [YouTube: Reducible](https://youtu.be/ajv46BSqcK4)
  * @author SlavSquatSuperstar
  */
-internal class GJKDetector : CollisionDetector<Shape>, PenetrationSolver {
+internal class GJKDetector(private val maxIterations: Int = MAX_GJK_ITERATIONS) : CollisionDetector<Shape>, PenetrationSolver {
+
+    companion object {
+        const val MAX_GJK_ITERATIONS: Int = 20
+    }
+
+    private val epa = EPASolver()
 
     override fun checkIntersection(shape1: Shape?, shape2: Shape?): Boolean {
         return getSimplex(shape1, shape2) != null
     }
 
     override fun getPenetration(shape1: Shape?, shape2: Shape?): Penetration? {
-        return EPASolver(shape1, shape2).getPenetration(getSimplex(shape1, shape2))
+        return epa.getPenetration(shape1, shape2, getSimplex(shape1, shape2))
     }
 
     /**
@@ -56,7 +59,7 @@ internal class GJKDetector : CollisionDetector<Shape>, PenetrationSolver {
 
         var searchDir = -startPt // Search toward origin to surround it
 
-        for (i in 1..MAX_GJK_ITERATIONS) {
+        for (i in 1..maxIterations) {
             val currPt = Shape.support(shape1, shape2, searchDir) // Get next support point
             if (currPt.dot(searchDir) < 0f) return null // Continue only if next point passes origin
             simplex.add(currPt) // Add point to simplex

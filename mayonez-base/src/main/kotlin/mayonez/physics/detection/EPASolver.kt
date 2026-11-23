@@ -4,8 +4,6 @@ import mayonez.math.*
 import mayonez.math.shapes.*
 import kotlin.math.*
 
-const val MAX_EPA_ITERATIONS: Int = 40
-
 /**
  * Calculates the penetration between two shapes from their Minkowski sum
  * (simplex) by performing the expanding polytope/polygon algorithm (EPA).
@@ -18,7 +16,11 @@ const val MAX_EPA_ITERATIONS: Int = 40
  *
  * @author SlavSquatSuperstar
  */
-internal class EPASolver(private val shape1: Shape?, private val shape2: Shape?) {
+internal class EPASolver(private val maxIterations: Int = MAX_EPA_ITERATIONS) {
+
+    companion object {
+        const val MAX_EPA_ITERATIONS: Int = 40
+    }
 
     /**
      * Calculate the penetration between the two shapes from their simplex.
@@ -27,11 +29,11 @@ internal class EPASolver(private val shape1: Shape?, private val shape2: Shape?)
      * @return the penetration, or null if the intersection is too small
      */
     // TODO See § Alternatives for optimizations
-    internal fun getPenetration(simplex: Simplex?): Penetration? {
+    internal fun getPenetration(shape1: Shape?, shape2: Shape?, simplex: Simplex?): Penetration? {
         if (shape1 == null || shape2 == null || simplex == null) return null
-        val expandedSimplex = simplex.expand(MAX_EPA_ITERATIONS) // sort edges prior
+        val expandedSimplex = simplex.expand(maxIterations) // sort edges prior
 
-        for (i in 0..<MAX_EPA_ITERATIONS) {
+        for (i in 0..<maxIterations) {
             // 1. Find the closest face in the simplex to the origin
             val closest = expandedSimplex.getClosestEdgeToOrigin()
 
