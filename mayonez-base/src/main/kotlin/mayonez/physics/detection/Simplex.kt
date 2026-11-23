@@ -60,7 +60,7 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
      * @param index the index of the point to remove
      */
     internal fun remove(index: Int) {
-        if (index >= size || index < 0) return
+        if (index !in 0..<size) return
         points.removeAt(index)
         size -= 1
     }
@@ -79,5 +79,7 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
      * @return a polygon
      */
     internal fun toPolygon(): Polygon = Polygon(*this.points.toTypedArray())
+
+    override fun toString(): String =  "Simplex (Size = $size)"
 
 }

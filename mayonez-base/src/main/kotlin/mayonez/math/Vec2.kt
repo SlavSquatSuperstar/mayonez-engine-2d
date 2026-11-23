@@ -197,12 +197,16 @@ class Vec2(
         // Static Vector Methods
 
         /**
-         * Calculates the vector triple product between three vectors. The vector
-         * triple product is defined as (a × b) × c = b(a · c) - a(b · c).
+         * Calculates the vector triple product given three vectors, which can
+         * be expanded to `(a × b) × c = b(a · c) - a(b · c)`. If the first
+         * and last vectors are the same (`a = c`), then the triple product
+         * outputs a vector `d` perpendicular to `a` and in the direction of
+         * the second (`d · b > 0`). If any of the vectors are zero, then the
+         * result will be zero.
          *
-         * @param v1 the first vector, a
-         * @param v2 the second vector, b
-         * @param v3 the third vector, c
+         * @param v1 the first vector, `a`
+         * @param v2 the second vector, `b`
+         * @param v3 the third vector, `c`
          * @return the vector triple product
          */
         @JvmStatic
