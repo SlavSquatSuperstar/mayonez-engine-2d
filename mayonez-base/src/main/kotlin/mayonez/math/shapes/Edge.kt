@@ -60,7 +60,7 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      *
      * @return the left unit normal
      */
-    fun unitNormalLeft(): Vec2 = toVector().normal().unit()
+    fun unitNormalLeft(): Vec2 = toVector().normal() / length
 
     /**
      * The right unit normal vector of this edge, a vector perpendicular to
@@ -69,7 +69,7 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      *
      * @return the right unit normal
      */
-    fun unitNormalRight(): Vec2 = -toVector().normal().unit()
+    fun unitNormalRight(): Vec2 = -toVector().normal() / length
 
     /**
      * The unit normal vector of this edge that points toward a certain
@@ -140,26 +140,26 @@ class Edge(val start: Vec2, val end: Vec2) : Shape() {
      * @return the nearest point
      */
     override fun nearestPoint(to: Vec2): Vec2 {
-        // Project point on segment
+        // Project point onto segment
         val projLength = (to - start).dot(toVector()) / length
-        // Projection past segment end
+        // Projection is past segment end
         return if (projLength > length) end
-        // Projection beind segment start
+        // Projection is behind segment start
         else if (projLength < 0) start
-        // Projection inside segment
+        // Projection is inside segment
         else start + (toVector() * (projLength / length))
     }
 
     override fun contains(point: Vec2): Boolean {
         // Point is an endpoint
         if (point == start || point == end) return true
-        // Project point on segment
+        // Project point onto segment
         val startToPoint = point - start
-        val projLen = startToPoint.dot(toVector()) / length
-        // Projection outside segment
-        return if (projLen !in 0f..length) false
-        // Check if the point equals its projection (i.e. angle is zero)
-        else MathUtils.equals(projLen, startToPoint.len())
+        val projLength = startToPoint.dot(toVector()) / length
+        // Projection is outside segment
+        return if (projLength !in 0f..length) false
+        // Check if the point is collinear with the endpoints
+        else MathUtils.equals(startToPoint.cross(toVector()), 0f)
     }
 
     // Physical Properties
