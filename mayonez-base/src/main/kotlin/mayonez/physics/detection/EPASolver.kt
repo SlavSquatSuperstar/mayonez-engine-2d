@@ -5,9 +5,11 @@ import mayonez.math.shapes.*
 import kotlin.math.*
 
 /**
- * Calculates the penetration between two shapes from their Minkowski sum
- * (simplex) by performing the expanding polytope/polygon algorithm (EPA).
- * Used by [mayonez.physics.detection.GJKDetector].
+ * Calculates the [Penetration] between two shapes using the expanding polytope
+ * (polygon) algorithm (EPA). This class takes a [Simplex], which should be a
+ * triangle containing the origin, typically returned from a [GJKDetector].
+ * EPA expands the simplex by adding support points until the edge closest to
+ * the origin also lies on the boundary of the Minkowski sum.
  *
  * Sources
  * - [dyn4j](https://dyn4j.org/2010/05/epa-expanding-polytope-algorithm)
@@ -23,23 +25,26 @@ internal class EPASolver(private val maxIterations: Int = MAX_EPA_ITERATIONS) {
     }
 
     /**
-     * Calculate the penetration between the two shapes from their simplex.
+     * Calculate the penetration between two intersecting shapes given their
+     * simplex.
      *
-     * @param simplex the Minkowski sum of the two shapes
+     * @param shape1 the first shape
+     * @param shape2 the second shape
+     * @param simplex the GJK termination simplex
      * @return the penetration, or null if the intersection is too small
      */
-    // TODO See § Alternatives for optimizations
+    // TODO Augmenting simplexes
     internal fun getPenetration(shape1: Shape?, shape2: Shape?, simplex: Simplex?): Penetration? {
         if (shape1 == null || shape2 == null || simplex == null) return null
-        val expandedSimplex = simplex.expand(maxIterations) // sort edges prior
+        val expandedSimplex = simplex.expand(maxIterations)
 
         for (i in 0..<maxIterations) {
-            // 1. Find the closest face in the simplex to the origin
+            // Find the closest face in the simplex to the origin
             val closest = expandedSimplex.getClosestEdgeToOrigin()
 
-            // 2. Look for a point in the Minkowski sum in the direction of the face's normal
-            val supp = Shape.support(shape1, shape2, closest.norm)
-            val suppPen = expandedSimplex.findPointPenetration(supp, closest)
+            // Look for a point in the Minkowski sum in the direction of the face's normal
+            val suppPt = Shape.support(shape1, shape2, closest.norm)
+            val suppPen = expandedSimplex.getPointPenetration(suppPt, closest)
             if (suppPen != null) return suppPen
         }
         return null
@@ -51,41 +56,38 @@ internal class EPASolver(private val maxIterations: Int = MAX_EPA_ITERATIONS) {
         for (i in 0..<this.size) {
             val j = (i + 1) % this.size
 
-            val ptA = this[i]
-            val vecAB = this[j] - ptA // vector AB, the edge
             /*
-             * TODO check winding of vertices instead, triple product, unreliable for small penetrations
-             * point right for counterclockwise winding and v.v.
+             * Given: A (start), B (end), O (origin)
+             * Find the outward normal of line AB, n = (AB x OA) x AB
+             * Since the triple product is unreliable for small penetrations,
+             * rely on a consistent winding order and use the unit normal
              */
-            val norm = vecAB.normal().unit() // outward unit normal of edge
-//            val norm = Vec2.tripleProduct(vecAB, ptA, vecAB).unit() // n = (AB x OA) x AB
-            val dist = abs(ptA.dot(norm)) // project any point on normal
+            val ptA = this[i]
+            val vecAB = Edge(ptA, this[j])
+            val norm = vecAB.unitNormalRight() // Outward unit normal of edge (CCW)
+            val dist = abs(ptA.dot(norm)) // Project either point onto normal
             if (dist < face.dist) face = Face(norm, dist, j)
         }
         return face
     }
 
-    private fun Simplex.findPointPenetration(supp: Vec2, closest: Face): Penetration? {
-        val suppDist = supp.dot(closest.norm) // distance along normal is depth
+    private fun Simplex.getPointPenetration(suppPt: Vec2, closest: Face): Penetration? {
+        val suppDist = suppPt.dot(closest.norm) // Distance along normal is depth
 
-        return if (supportPointOnClosestEdge(suppDist, closest)) {
-            // cannot expand simplex anymore
+        return if (MathUtils.equals(suppDist, closest.dist)) {
+            // Found support point on closest edge
             Penetration(closest.norm, suppDist + MathUtils.FLOAT_EPSILON)
         } else {
-            // keep looking
-            this.add(closest.index, supp)
+            // Insert the support point between the two endpoints and keep looking
+            this.add(closest.index, suppPt)
             null
         }
-    }
-
-    private fun supportPointOnClosestEdge(suppDist: Float, closest: Face): Boolean {
-        return MathUtils.equals(suppDist, closest.dist)
     }
 
     // Helper Class
 
     /**
-     * A face made by connecting two adjacent points from a simplex.
+     * A face made by connecting two adjacent points on a simplex.
      *
      * @param norm the outward edge normal
      * @param dist the edge distance to the origin
