@@ -36,7 +36,7 @@ internal class EPASolver(private val maxIterations: Int = MAX_EPA_ITERATIONS) {
     // TODO Augmenting simplexes
     internal fun getPenetration(shape1: Shape?, shape2: Shape?, simplex: Simplex?): Penetration? {
         if (shape1 == null || shape2 == null || simplex == null) return null
-        val expandedSimplex = simplex.expand(maxIterations)
+        val expandedSimplex = simplex.sorted().expand(maxIterations)
 
         for (i in 0..<maxIterations) {
             // Find the closest face in the simplex to the origin

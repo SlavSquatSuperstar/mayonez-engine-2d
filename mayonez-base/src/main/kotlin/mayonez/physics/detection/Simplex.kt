@@ -49,7 +49,7 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
      * @param point a support point
      */
     internal fun add(index: Int, point: Vec2) {
-        if (size >= maxSize || index !in points.indices) return
+        if (size >= maxSize || index !in 0..<size) return
         points.add(index, point)
         size++
     }
@@ -66,12 +66,26 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
     }
 
     /**
-     * Expands this simplex while keeping the original points.
+     * Creates a new simplex with the same points as this one and an expanded
+     * capacity.
      *
      * @param newSize the size of the new simplex
-     * @return the larger simplex
+     * @return the expanded simplex
      */
-    internal fun expand(newSize: Int): Simplex = Simplex(*points.toTypedArray(), maxSize = newSize)
+    internal fun expand(newSize: Int): Simplex {
+        return Simplex(*points.toTypedArray(), maxSize = newSize)
+    }
+
+    /**
+     * Creates a new simplex with the same points as this one, sorted in
+     * clockwise order.
+     *
+     * @return the sorted simplex
+     */
+    internal fun sorted(): Simplex {
+        val orderedPoints = orderedConvexHull(points.toTypedArray())
+        return Simplex(*orderedPoints, maxSize = orderedPoints.size)
+    }
 
     /**
      * Creates a polygon from the points in the simplex. Useful for debugging.
@@ -80,6 +94,6 @@ internal class Simplex(vararg points: Vec2, private val maxSize: Int = 3) {
      */
     internal fun toPolygon(): Polygon = Polygon(*this.points.toTypedArray())
 
-    override fun toString(): String =  "Simplex (Size = $size)"
+    override fun toString(): String = "Simplex (Size = $size)"
 
 }
