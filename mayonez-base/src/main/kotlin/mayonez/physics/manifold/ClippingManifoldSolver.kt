@@ -54,24 +54,29 @@ internal class ClippingManifoldSolver : ContactSolver {
 private fun Shape.getFarthestFeature(direction: Vec2): Any {
     return when (this) {
         is Polygon -> this.getFarthestEdge(direction)
+        is Edge -> this
         else -> this.supportPoint(direction)
     }
 }
 
 private fun Polygon.getFarthestEdge(direction: Vec2): Edge {
-    // Find the furthest vertex and check left and right edges
+    /*
+     * Find the farthest (max) vertex from the origin by comparing the dot
+     * products. Take the max vertex's left and right edges and select the edge
+     * that is more perpendicular to the normal.
+     */
     val vertexDistances = vertices.map { it.dot(direction) }.toFloatArray()
     val farthest = MathUtils.maxIndex(*vertexDistances)
-    val leftEdge = edges[farthest] // (v, v_next)
+    val leftEdge = edges[farthest] // (v, v_next) (should flip)
     val rightEdge = edges[farthest.prev(numVertices)] // (v_prev, v)
 
-    // Check which normal is more perpendicular
     return if (
-        leftEdge.unitNormalRight().dot(direction) > rightEdge.unitNormalRight().dot(direction)
+        leftEdge.unitNormalRight().dot(direction)
+        >= rightEdge.unitNormalRight().dot(direction)
     ) leftEdge else rightEdge
 }
 
-// Manifold Helper Methods (1 Point)
+// Manifold Helper Methods
 
 private fun createManifoldWithOnePoint(
     shape1: Shape, shape2: Shape, point: Vec2, penetration: Penetration
@@ -82,16 +87,6 @@ private fun createManifoldWithOnePoint(
     return manifold
 }
 
-private fun shouldUseShape2Normal(feature1: Edge, feature2: Edge, normal: Vec2): Boolean {
-    return feature1.getLengthAlongNormal(normal) > feature2.getLengthAlongNormal(normal)
-}
-
-private fun Edge.getLengthAlongNormal(normal: Vec2): Float {
-    return abs(this.toVector().dot(normal))
-}
-
-// Manifold Helper Methods (2 Points)
-
 private fun createManifoldWithTwoPoints(
     shape1: Shape, shape2: Shape,
     edge1: Edge, edge2: Edge,
@@ -99,16 +94,24 @@ private fun createManifoldWithTwoPoints(
 ): Manifold {
     val (normal, depth) = penetration
 
-    val swapShapes = shouldUseShape2Normal(edge1, edge2, normal)
+    // Determine incident and reference shapes/features
+    val swapShapes = edge1.getLengthAlongNormal(normal) > edge2.getLengthAlongNormal(normal)
     val (refEdge, incEdge) = getEdgesFromFeatures(swapShapes, edge1, edge2)
-
-    val colNormal = if (swapShapes) -normal else normal
-    val manifold = createManifoldForTwoEdges(shape1, shape2, swapShapes, colNormal, depth)
+    val (refShape, incShape) = getShapesFromFeatures(swapShapes, shape1, shape2)
+    val manifold = Manifold(refShape, incShape, normal, depth)
 
     // Clip incident edge
     val clippedEdge = incEdge.clipToSegment(refEdge)
-    val incShape = if (swapShapes) shape2 else shape1
-    manifold.addContactsFromEdges(incShape, refEdge, clippedEdge, colNormal)
+
+    // Add contacts from edges
+    val colNormal = if (swapShapes) -normal else normal
+    val incEdgeLength = refEdge.start.dot(colNormal)
+    for (pt in arrayOf(clippedEdge.start, clippedEdge.end)) {
+        // Is point clipping inside shape
+        if ((pt.dot(colNormal) <= incEdgeLength) && (pt in incShape)) {
+            manifold.addContact(pt)
+        }
+    }
     return manifold
 }
 
@@ -118,27 +121,12 @@ private fun getEdgesFromFeatures(
     return if (swapShapes) Pair(feature2, feature1) else Pair(feature1, feature2)
 }
 
-private fun createManifoldForTwoEdges(
-    shape1: Shape, shape2: Shape, swapShapes: Boolean,
-    colNormal: Vec2, depth: Float
-): Manifold {
-    return if (swapShapes) Manifold(shape2, shape1, -colNormal, depth)
-    else Manifold(shape1, shape2, colNormal, depth)
+private fun getShapesFromFeatures(
+    swapShapes: Boolean, shape1: Shape, shape2: Shape
+): Pair<Shape, Shape> {
+    return if (swapShapes) Pair(shape2, shape1) else Pair(shape1, shape2)
 }
 
-private fun Manifold.addContactsFromEdges(
-    incShape: Shape, refEdge: Edge, clippedEdge: Edge, colNormal: Vec2
-) {
-    val incEdgeLength = refEdge.start.dot(colNormal)
-    for (pt in arrayOf(clippedEdge.start, clippedEdge.end)) {
-        if (pt.isClippedInsideShape(incShape, colNormal, incEdgeLength)) {
-            this.addContact(pt)
-        }
-    }
-}
-
-private fun Vec2.isClippedInsideShape(
-    incShape: Shape, colNormal: Vec2, incEdgeLength: Float
-): Boolean {
-    return (dot(colNormal) <= incEdgeLength) && (this in incShape)
+private fun Edge.getLengthAlongNormal(normal: Vec2): Float {
+    return abs(this.toVector().dot(normal))
 }
