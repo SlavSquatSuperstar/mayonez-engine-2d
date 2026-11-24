@@ -18,10 +18,14 @@ import kotlin.math.*
  *
  * @author SlavSquatSuperstar
  */
-internal class EPASolver(private val maxIterations: Int = MAX_EPA_ITERATIONS) {
+internal class EPASolver(
+    private val maxIterations: Int = MAX_EPA_ITERATIONS,
+    private val distanceMargin: Float = DISTANCE_MARGIN
+) {
 
     companion object {
-        const val MAX_EPA_ITERATIONS: Int = 40
+        const val MAX_EPA_ITERATIONS: Int = 20
+        const val DISTANCE_MARGIN: Float = 1e-4f
     }
 
     /**
@@ -44,8 +48,15 @@ internal class EPASolver(private val maxIterations: Int = MAX_EPA_ITERATIONS) {
 
             // Look for a point in the Minkowski sum in the direction of the face's normal
             val suppPt = Shape.support(shape1, shape2, closest.norm)
-            val suppPen = expandedSimplex.getPointPenetration(suppPt, closest)
-            if (suppPen != null) return suppPen
+            val depth = suppPt.dot(closest.norm) // Support point distance along normal
+
+            if (MathUtils.equals(depth, closest.dist, distanceMargin)) {
+                // Found support point on closest edge
+                return Penetration(closest.norm, depth)
+            } else {
+                // Insert the support point between the two endpoints and keep looking
+                expandedSimplex.add(closest.index, suppPt)
+            }
         }
         return null
     }
@@ -69,19 +80,6 @@ internal class EPASolver(private val maxIterations: Int = MAX_EPA_ITERATIONS) {
             if (dist < face.dist) face = Face(norm, dist, j)
         }
         return face
-    }
-
-    private fun Simplex.getPointPenetration(suppPt: Vec2, closest: Face): Penetration? {
-        val suppDist = suppPt.dot(closest.norm) // Distance along normal is depth
-
-        return if (MathUtils.equals(suppDist, closest.dist)) {
-            // Found support point on closest edge
-            Penetration(closest.norm, suppDist + MathUtils.FLOAT_EPSILON)
-        } else {
-            // Insert the support point between the two endpoints and keep looking
-            this.add(closest.index, suppPt)
-            null
-        }
     }
 
     // Helper Class
